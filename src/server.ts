@@ -1,6 +1,6 @@
 import { App } from '@/app';
-import { AuthRoute } from '@routes/auth.route';
-import { UserRoute } from '@routes/users.route';
+import { AuthRoute } from '@routes/mobile';
+import { UserRoute } from '@routes/mobile';
 import { SeedersRoute } from './routes/seeders';
 import { ValidateEnv } from '@utils/validateEnv';
 

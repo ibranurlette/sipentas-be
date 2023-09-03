@@ -11,7 +11,7 @@ generator client {
 }
 
 model User {
-  id        String   @id @default(uuid()) @db.Uuid
+  id        String   @id
   name      String   @map("name")
   username  String   @map("username")
   email     String   @map("email")
@@ -19,6 +19,150 @@ model User {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
+  Pm     Pm[]
+
  @@unique([username])
  @@map("users")
 }
+
+model CategoriePpks {
+  id            String   @id 
+  name          String   @map("name")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @default(now()) @updatedAt @map("updated_at")
+
+  RagamPpks     RagamPpks[]
+
+ @@map("categorie_ppks")
+}
+
+model RagamPpks {
+  id            String   @id 
+  name          String   @map("name")
+  categorie     String   @map("categorie")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @default(now()) @updatedAt @map("updated_at")
+
+  CategoriePpks CategoriePpks @relation(fields: [categorie], references: [id])
+
+ @@map("ragam_ppks")
+}
+
+
+model Pm {
+  id                   String   @id 
+  name                 String   @map("name")
+  nik                  String   @map("nik")
+  provinceId             String   @map("province_id")
+  cityId                 String   @map("city_od")
+  districtId             String   @map("district_id")
+  villageId              String   @map("village_id")
+  address              String   @map("address")
+  gender               Gender   @default(M) @map("gender")
+  dateBirth            DateTime @default(now()) @map("date_birth")
+  placeDateOfBirth     String   @map("place_date_Of_birth")
+  kodePos              String   @map("kode_pos")
+  phone                String   @map("phone")
+  userId               String  @map("user_id")
+  directoratId         String  @map("directorat_id")
+  sentaraId           String  @map("sentra_id")
+  flag                 Int      @map("flag")
+  createdAt            DateTime @default(now()) @map("created_at")
+  updatedAt            DateTime @default(now()) @updatedAt @map("updated_at")
+
+  User User @relation(fields: [userId], references: [id])
+  Province Province? @relation(fields: [provinceId], references: [id])
+  City     City?     @relation(fields: [cityId], references: [id])
+  District District? @relation(fields: [districtId], references: [id])
+  Village  Village?  @relation(fields: [villageId], references: [id])
+  Directorat  Directorat  @relation(fields: [directoratId], references: [id])
+  Sentra  Sentra  @relation(fields: [sentaraId], references: [id])
+
+ @@unique([phone])
+ @@map("pm")
+}
+
+
+model Province {
+  id   String @id
+  name String
+
+  Cities        City[]
+  Pm Pm[]
+  Sentra Sentra[]
+
+  @@map("provinces")
+}
+
+model City {
+  id         String @id
+  provinceId String @map("province_id")
+  name       String
+
+  Province      Province       @relation(fields: [provinceId], references: [id])
+  Districts     District[]
+  Pm Pm[]
+  Sentra Sentra[]
+
+  @@map("cities")
+}
+
+model District {
+  id     String @id
+  cityId String @map("city_id")
+  name   String
+
+  City          City           @relation(fields: [cityId], references: [id])
+  Villages      Village[]
+  Pm Pm[]
+  Sentra Sentra[]
+
+  @@map("districts")
+}
+
+model Village {
+  id         String @id
+  districtId String @map("district_id")
+  name       String
+
+  District      District       @relation(fields: [districtId], references: [id])
+  Pm Pm[]
+  Sentra Sentra[]
+
+  @@map("villages")
+}
+
+
+enum Gender {
+  M
+  F
+}
+
+
+model Directorat {
+  id            String   @id 
+  name          String   @map("name")
+
+  Pm Pm[]
+
+ @@map("directorats")
+}
+
+model Sentra {
+  id            String   @id 
+  name          String   @map("name")
+  provinceId             String   @map("province_id")
+  cityId                 String   @map("city_od")
+  districtId             String   @map("district_id")
+  villageId              String   @map("village_id")
+  
+  Pm Pm[]
+  Province Province? @relation(fields: [provinceId], references: [id])
+  City     City?     @relation(fields: [cityId], references: [id])
+  District District? @relation(fields: [districtId], references: [id])
+  Village  Village?  @relation(fields: [villageId], references: [id])
+
+ @@map("sentras")
+}
+
+
